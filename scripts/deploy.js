@@ -15,7 +15,7 @@ async function main() {
 
   // We get the contract to deploy
   const Token = await hre.ethers.getContractFactory("Token");
-  const token = await Token.deploy("TestToken", "TT", 5, 100, 150, 10000);
+  const token = await Token.deploy("TestToken1", "TT1", 5, 1, 10, 10000);
 
   await token.deployed();
 

@@ -9,20 +9,18 @@ import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 
 contract Token is ERC20, ERC20Permit, ERC20Votes {
 
-    // string private name;
-    // string private symbol;
-    uint daoMaxSize;
-    uint daoCounter;
-    mapping(address => bool) approvedList;
-    mapping(address => uint) balances;
-    address owner;
+    uint public daoMaxSize;
+    uint public daoCounter;
+    mapping(address => bool) public approvedList;
+    mapping(address => uint) public balances;
+    address public owner;
 
     // set the max and min investment amount of the DAO
-    uint minEtherAmount;
-    uint maxEtherAmount;
+    uint public minEtherAmount;
+    uint public maxEtherAmount;
 
     // Tokens per 1 ether
-    uint mintRate;
+    uint public mintRate;
     AggregatorV3Interface internal priceFeed;
 
     constructor(string memory _name_, string memory _symbol_, uint _daoMaxSize, uint _minEtherAmount, uint _maxEtherAmount, uint _mintRate) 
@@ -102,10 +100,10 @@ contract Token is ERC20, ERC20Permit, ERC20Votes {
     }
 
     // minting mechanism
-    function mintTokens (address _member) external payable isApproved(_member) eligableToMint(_member) {
+    function mintTokens (address _member, uint _amount) external payable isApproved(_member) eligableToMint(_member) {
         require(msg.value <= maxEtherAmount);
         require(msg.value >= minEtherAmount);
-        uint weiAmount = msg.value;
+        uint weiAmount = _amount;
         uint tokenAmount = (weiAmount / 10**18) * mintRate;
 
 

@@ -19,6 +19,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import { visuallyHidden } from '@mui/utils';
 import Grid from '@mui/material/Grid';
+import { EthAddress } from 'ethereum-react-components';
 
 
 function createData(address, holding, percentage) {
@@ -223,7 +224,7 @@ export default function EnhancedTable() {
                       selected={isItemSelected}
                     >
                       <TableCell component="th" scope="row" padding="none">
-                        {row.address}
+                        <EthAddress short address={row.address} />
                       </TableCell>
                       <TableCell align="right">{row.holding}</TableCell>
                       <TableCell align="right">{row.percentage}</TableCell>

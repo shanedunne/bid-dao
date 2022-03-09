@@ -18,6 +18,8 @@ import Tooltip from '@mui/material/Tooltip';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import { visuallyHidden } from '@mui/utils';
+import Grid from '@mui/material/Grid';
+import { EthAddress } from 'ethereum-react-components';
 
 function createData(proposalID, description, proposer, status) {
   return {
@@ -189,69 +191,74 @@ export default function EnhancedTable() {
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
   return (
-    <Box sx={{ width: '90%', mx: 'auto' }}>
-      <Paper sx={{ width: '100%', mb: 2 }}>
-        <TableContainer>
-          <Table
-            sx={{ minWidth: 750 }}
-            aria-labelledby="tableTitle"
-            size={dense ? 'small' : 'medium'}
-          >
-            <EnhancedTableHead
-              numSelected={selected.length}
-              order={order}
-              orderBy={orderBy}
-              onRequestSort={handleRequestSort}
-              rowCount={rows.length}
-            />
-            <TableBody>
-              {/* if you don't need to support IE11, you can replace the `stableSort` call with:
-                 rows.slice().sort(getComparator(order, orderBy)) */}
-              {stableSort(rows, getComparator(order, orderBy))
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) => {
-                  const isItemSelected = isSelected(row.proposalID);
+    
+    <Grid container spacing={2}>
+      <Grid item xs={7}>
+        <Box sx={{ width: '90%', mx: 'auto' }}>
+          <Paper sx={{ width: '100%', mb: 2 }}>
+            <TableContainer>
+              <Table
+                sx={{ minWidth: 750 }}
+                aria-labelledby="tableTitle"
+                size={dense ? 'small' : 'medium'}
+              >
+                <EnhancedTableHead
+                  numSelected={selected.length}
+                  order={order}
+                  orderBy={orderBy}
+                  onRequestSort={handleRequestSort}
+                  rowCount={rows.length}
+                />
+                <TableBody>
+                  {/* if you don't need to support IE11, you can replace the `stableSort` call with:
+                    rows.slice().sort(getComparator(order, orderBy)) */}
+                  {stableSort(rows, getComparator(order, orderBy))
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((row, index) => {
+                      const isItemSelected = isSelected(row.proposalID);
 
-                  return (
+                      return (
+                        <TableRow
+                          hover
+                          onClick={(event) => handleClick(event, row.proposalID)}
+                          aria-checked={isItemSelected}
+                          tabIndex={-1}
+                          key={row.proposalID}
+                          selected={isItemSelected}
+                        >
+                          <TableCell component="th" scope="row" padding="none">
+                            {row.proposalID}
+                          </TableCell>
+                          <TableCell align="right">{row.description}</TableCell>
+                          <TableCell align="right">{row.proposer}</TableCell>
+                          <TableCell align="right">{row.status}</TableCell>
+                        </TableRow>
+                      );
+                    })}
+                  {emptyRows > 0 && (
                     <TableRow
-                      hover
-                      onClick={(event) => handleClick(event, row.proposalID)}
-                      aria-checked={isItemSelected}
-                      tabIndex={-1}
-                      key={row.proposalID}
-                      selected={isItemSelected}
+                      style={{
+                        height: (dense ? 33 : 53) * emptyRows,
+                      }}
                     >
-                      <TableCell component="th" scope="row" padding="none">
-                        {row.proposalID}
-                      </TableCell>
-                      <TableCell align="right">{row.description}</TableCell>
-                      <TableCell align="right">{row.proposer}</TableCell>
-                      <TableCell align="right">{row.status}</TableCell>
+                      <TableCell colSpan={6} />
                     </TableRow>
-                  );
-                })}
-              {emptyRows > 0 && (
-                <TableRow
-                  style={{
-                    height: (dense ? 33 : 53) * emptyRows,
-                  }}
-                >
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={rows.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
-      </Paper>
-    </Box>
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
+            <TablePagination
+              rowsPerPageOptions={[5, 10, 25]}
+              component="div"
+              count={rows.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+          </Paper>
+        </Box>
+      </Grid>
+    </Grid>
   );
 }
