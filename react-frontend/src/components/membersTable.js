@@ -20,6 +20,7 @@ import Switch from '@mui/material/Switch';
 import { visuallyHidden } from '@mui/utils';
 import Grid from '@mui/material/Grid';
 import { EthAddress } from 'ethereum-react-components';
+import { styled } from "@mui/material/styles";
 
 
 function createData(address, holding, percentage) {
@@ -190,7 +191,7 @@ export default function EnhancedTable() {
 
   return (
     <Grid container spacing={2}>
-      <Grid item xs={5}>
+      <Grid item xs={6}>
         <Box sx={{ width: '90%', mx: 'auto'}}>
       <Paper sx={{ width: '100%', mb: 2 }}>
         <TableContainer>

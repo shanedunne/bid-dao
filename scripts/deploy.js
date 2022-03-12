@@ -5,26 +5,32 @@
 // Runtime Environment's members available in the global scope.
 const hre = require("hardhat");
 
-async function main() {
+async function deployToken() {
   // Hardhat always runs the compile task when running scripts with its command
   // line interface.
   //
   // If this script is run directly using `node` you may want to call compile
   // manually to make sure everything is compiled
-  // await hre.run('compile');
+  await hre.run('compile');
+
+  const minEtherValue = ethers.utils.parseUnits("0.01", "ether");
+  const maxEtherValue = ethers.utils.parseUnits("0.1", "ether");
+
 
   // We get the contract to deploy
   const Token = await hre.ethers.getContractFactory("Token");
-  const token = await Token.deploy("TestToken1", "TT1", 5, 1, 10, 10000);
+  const token = await Token.deploy("Dao Name", "TestToken2", "TT1", 5, minEtherValue, maxEtherValue, 10000);
 
   await token.deployed();
 
-  console.log("TestToken deployed to:", token.address);
+  console.log("TestToken2 deployed to:", token.address);
+  console.log(minEtherValue)
+  console.log(maxEtherValue)
 }
 
 // We recommend this pattern to be able to use async/await everywhere
 // and properly handle errors.
-main()
+deployToken()
   .then(() => process.exit(0))
   .catch((error) => {
     console.error(error);

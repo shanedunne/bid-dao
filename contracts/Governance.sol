@@ -7,17 +7,28 @@ import "@openzeppelin/contracts/governance/extensions/GovernorCountingSimple.sol
 import "@openzeppelin/contracts/governance/extensions/GovernorVotes.sol";
 import "@openzeppelin/contracts/governance/extensions/GovernorVotesQuorumFraction.sol";
 import "@openzeppelin/contracts/governance/extensions/GovernorTimelockControl.sol";
+import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Votes.sol";
+import "./Collection.sol";
+
 
 contract Governance is Governor, GovernorSettings, GovernorCountingSimple, GovernorVotes, GovernorVotesQuorumFraction, GovernorTimelockControl {
 
+    address public tokenAddress;
 
-    constructor(uint _voteDelay, uint _votePeriod, IVotes _token, uint _quorum, uint agreementPercentage, TimelockController _timelock)
-        Governor("MyGovernor")
+    constructor(uint _voteDelay, uint _votePeriod, IVotes _token, uint _quorum, TimelockController _timelock)
+        Governor("Governance")
         GovernorSettings(_voteDelay /* vote delay */, _votePeriod /* vote period */, 0)
         GovernorVotes(_token)
         GovernorVotesQuorumFraction(_quorum)
         GovernorTimelockControl(_timelock)
+    
     {}
+    
+
+    // Push token address for this DAO to the array in Collection.sol. The aim here is to recognise what DAOs were generated on the platform
+    // and hence will be viewable once a user is holding the token associated with the DAO
+
+    // Collection.bidDaoTokenLists.push(tokenAddress);
 
     // The following functions are overrides required by Solidity.
 
@@ -115,4 +126,6 @@ contract Governance is Governor, GovernorSettings, GovernorCountingSimple, Gover
     {
         return super.supportsInterface(interfaceId);
     }
+
+    
 }

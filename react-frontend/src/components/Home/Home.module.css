@@ -1,0 +1,70 @@
+.homeDiv {
+    width: 500px;
+    margin: 0 auto;
+    padding-top: 60px;
+}
+
+.heading {
+    font-size: 50px;
+    font-weight: 300;
+    color: #fafafa;
+    text-align: center;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #BC8034;
+  }
+
+.para {
+    color: #fafafa;
+    text-align: center;
+    font-size: 20px;
+  }
+
+  .homeOptions {
+      text-align: center;
+      padding-top: 20px;
+  }
+
+
+  .createDAO {
+      text-align: center;
+    width: 50%;
+    background: #BC8034;
+    color: #fafafa;
+    text-transform: uppercase;
+    border: none;
+    margin: auto;
+    padding: 20px;
+    font-size: 18px;
+    font-weight: 300;
+    letter-spacing: 4px;
+  }
+  
+  .createDAO:hover {
+    background: #db9841;
+    color: #fafafa;
+  }
+  
+  .createDAO:active,
+  .createDAO:active {
+    transition: 0.3s all;
+    border: 1px solid transparent;
+    opacity: 0.8;
+  }
+
+  .listDiv {
+  }
+
+  .list {
+      width: 60%;
+      list-style: none;
+      display: table;
+      margin: auto;
+  }
+
+  .listItem {
+    color: #fafafa;
+    text-align: center;
+    font-size: 20px;
+    border-bottom: 1px solid #BC8034;
+    padding-top: 15px;
+  }

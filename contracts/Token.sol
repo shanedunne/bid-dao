@@ -5,10 +5,13 @@ pragma solidity ^0.8.1;
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/draft-ERC20Permit.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Votes.sol";
-import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
+import "./Collection.sol";
 
-contract Token is ERC20, ERC20Permit, ERC20Votes {
+contract Token is ERC20, ERC20Permit, ERC20Votes, Collection {
 
+    string public daoName;
+    string public localName;
+    string public localSymbol;
     uint public daoMaxSize;
     uint public daoCounter;
     mapping(address => bool) public approvedList;
@@ -21,19 +24,28 @@ contract Token is ERC20, ERC20Permit, ERC20Votes {
 
     // Tokens per 1 ether
     uint public mintRate;
-    AggregatorV3Interface internal priceFeed;
 
-    constructor(string memory _name_, string memory _symbol_, uint _daoMaxSize, uint _minEtherAmount, uint _maxEtherAmount, uint _mintRate) 
+    // total supply which is not predetermined but dynamically created
+    uint public tokenTotalSupply;
+
+    // Initilising supply to allow owner access to dashboard to add members to list
+    uint constant _initial_supply = 1 * (10**18);
+
+    constructor(string memory _daoName, string memory _name_, string memory _symbol_, uint _daoMaxSize, uint _minEtherAmount, uint _maxEtherAmount, uint _mintRate) 
     ERC20(_name_, _symbol_)
-    ERC20Permit(_name_) {
+    ERC20Permit(_name_) payable {
+        daoName = _daoName;
+        localName = _name_;
+        localSymbol = _symbol_;
         daoCounter = 0;
         daoMaxSize = _daoMaxSize;
-        minEtherAmount = (_minEtherAmount * 10**18);
-        maxEtherAmount = (_maxEtherAmount * 10**18);
+        minEtherAmount = _minEtherAmount;
+        maxEtherAmount = _maxEtherAmount;
         mintRate = _mintRate;
         owner = msg.sender;
-        priceFeed = AggregatorV3Interface(0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419);
-        
+
+        _mint(msg.sender, _initial_supply);
+        balances[msg.sender] += _initial_supply;
     }
 
     // Events
@@ -81,6 +93,21 @@ contract Token is ERC20, ERC20Permit, ERC20Votes {
         require(balances[_checkAddress] == 0);
         _;
     }
+    
+    function pushToCollection() external {
+        Collection.TokenCollection memory tokenStruct = Collection.TokenCollection({
+            daoName: daoName,
+            daoTokenName: localName,
+            daoSymbol: localSymbol,
+            daoMaxSize_: daoMaxSize,
+            minEtherAmount_: minEtherAmount,
+            maxEtherAmount_: maxEtherAmount,
+            mintRate_: mintRate,
+            daoDeployer_: owner
+        });
+
+        Collection.tokenCollection.push(tokenStruct);
+    }
 
     // Functionality to handle approved members list
     function addMembersToApprovedList(address _newMember) external isOwner() {
@@ -100,16 +127,23 @@ contract Token is ERC20, ERC20Permit, ERC20Votes {
     }
 
     // minting mechanism
-    function mintTokens (address _member, uint _amount) external payable isApproved(_member) eligableToMint(_member) {
+    function mintTokens () external payable isApproved(msg.sender) eligableToMint(msg.sender) {
         require(msg.value <= maxEtherAmount);
         require(msg.value >= minEtherAmount);
-        uint weiAmount = _amount;
+        uint weiAmount = msg.value;
         uint tokenAmount = (weiAmount / 10**18) * mintRate;
+        tokenTotalSupply += tokenAmount;
 
 
-        _mint(_member, tokenAmount);
+        _mint(msg.sender, tokenAmount);
         emit newMember(msg.sender, tokenAmount);
     }
+
+    // Override transfer function to make token non-transferrable
+
+    // Terminate DAO an distribute balances
+    
+    
 
 
 }

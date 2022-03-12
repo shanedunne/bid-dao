@@ -1,0 +1,32 @@
+
+.Header, .HeaderConnected {
+  background-color: #0F0E0E;
+  height: 8vh;
+  width: 100vw;
+  border-bottom: 1px solid #BC8034;
+  float: left;
+  top: 0;
+  bottom:0;
+  overflow-y:scroll;
+}
+.button {
+  padding: 2rem;
+  border: none;
+  background-color: #BC8034;
+  font-size: 15px;
+  color: #fafafa;
+  float: right;
+  margin-right: 30px;
+}
+.button:hover {
+  background-color: #fafafa;
+  transition: 0.3s;
+  color: #BC8034;
+  cursor: pointer;
+}
+
+.addressId {
+  float: right;
+  margin-right: 30px;
+  margin-top: a;
+}
