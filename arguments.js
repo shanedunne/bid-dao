@@ -1,5 +1,7 @@
-// "TestToken2", "TT1", 5, 1, 10, 10000
+const minEtherValue = ethers.utils.parseUnits("0.01", "ether");
+const maxEtherValue = ethers.utils.parseUnits("0.1", "ether");
+
 
 module.exports = [
-    "TestToken2", "TT1", 5, 0.001, 10, 10000
+    "Funky Dao", "Funky Dao", "FUNKY", 5, 1, 10, 10000
 ]

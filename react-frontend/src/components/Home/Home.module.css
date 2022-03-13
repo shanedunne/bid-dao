@@ -52,19 +52,31 @@
   }
 
   .listDiv {
+    display: table;
+    margin: auto;
+    width: 250px;
   }
 
   .list {
-      width: 60%;
+      width: 100%;
       list-style: none;
-      display: table;
-      margin: auto;
+      padding-left: 0;
+      
   }
 
   .listItem {
     color: #fafafa;
     text-align: center;
     font-size: 20px;
-    border-bottom: 1px solid #BC8034;
+    border: 1px solid #fafafa;
     padding-top: 15px;
+    padding-bottom: 15px;
+  }
+
+  .daoName {
+      padding-right: 8px;
+  }
+
+  .daoSymbol {
+      padding-left: 8px;
   }

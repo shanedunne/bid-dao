@@ -13,9 +13,9 @@ export default function Home() {
                         <p className={style.para}>OR</p>
                         <div className={style.listDiv}>
                             <ul className={style.list}>
-                                <li className={style.listItem}><span className={style.daoName}>Test DAO</span><span className={style.daoSymbol}>TEST</span></li>
-                                <li className={style.listItem}><span className={style.daoName}>Test DAO</span><span className={style.daoSymbol}>TEST</span></li>
-                                <li className={style.listItem}><span className={style.daoName}>Test DAO</span><span className={style.daoSymbol}>TEST</span></li>
+                                <li className={style.listItem}><span className={style.daoName}>Cheese DAO</span><span className={style.daoSymbol}>CHEZ</span></li>
+                                <li className={style.listItem}><span className={style.daoName}>Pizza DAO</span><span className={style.daoSymbol}>PIZZA</span></li>
+                                <li className={style.listItem}><span className={style.daoName}>Invest DAO</span><span className={style.daoSymbol}>INV</span></li>
                             </ul>
                         </div>
                     </div>

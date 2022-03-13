@@ -1,4 +1,3 @@
-// contracts/GLDToken.sol
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.1;
 
@@ -14,13 +13,19 @@ contract Token is ERC20, ERC20Permit, ERC20Votes, Collection {
     string public localSymbol;
     uint public daoMaxSize;
     uint public daoCounter;
+
+    // Used to iterate over balances to display on ui
+    address[] public members;
     mapping(address => bool) public approvedList;
     mapping(address => uint) public balances;
     address public owner;
+    ERC20 stable;
+    
+    // Test coin for minting instead of a stable coin
 
     // set the max and min investment amount of the DAO
-    uint public minEtherAmount;
-    uint public maxEtherAmount;
+    uint public minStableAmount;
+    uint public maxStableAmount;
 
     // Tokens per 1 ether
     uint public mintRate;
@@ -29,9 +34,9 @@ contract Token is ERC20, ERC20Permit, ERC20Votes, Collection {
     uint public tokenTotalSupply;
 
     // Initilising supply to allow owner access to dashboard to add members to list
-    uint constant _initial_supply = 1 * (10**18);
+    uint constant _initial_supply = 100000 * (10**18);
 
-    constructor(string memory _daoName, string memory _name_, string memory _symbol_, uint _daoMaxSize, uint _minEtherAmount, uint _maxEtherAmount, uint _mintRate) 
+    constructor(string memory _daoName, string memory _name_, string memory _symbol_, uint _daoMaxSize, uint _minStableAmount, uint _maxStableAmount, uint _mintRate) 
     ERC20(_name_, _symbol_)
     ERC20Permit(_name_) payable {
         daoName = _daoName;
@@ -39,13 +44,17 @@ contract Token is ERC20, ERC20Permit, ERC20Votes, Collection {
         localSymbol = _symbol_;
         daoCounter = 0;
         daoMaxSize = _daoMaxSize;
-        minEtherAmount = _minEtherAmount;
-        maxEtherAmount = _maxEtherAmount;
+        minStableAmount = _minStableAmount;
+        maxStableAmount = _maxStableAmount;
         mintRate = _mintRate;
         owner = msg.sender;
+        members.push(msg.sender);
 
+        // Testing UI Purposes
+        members.push(0x0a4A683e62d14B85fd174E5428730515a907b658);
+        members.push(0xDCfF5f2C56Cf1926db33487ddc790dC045b85F93);
+        members.push(0xd410c9b2CcB1113b8Dcf3A64C56ef75c72Ad38E5);
         _mint(msg.sender, _initial_supply);
-        balances[msg.sender] += _initial_supply;
     }
 
     // Events
@@ -53,6 +62,7 @@ contract Token is ERC20, ERC20Permit, ERC20Votes, Collection {
     event newMember(address _member, uint contribution);
 
     // The functions below are overrides required by Solidity.
+
 
     function _afterTokenTransfer(address from, address to, uint256 amount)
         internal
@@ -100,8 +110,8 @@ contract Token is ERC20, ERC20Permit, ERC20Votes, Collection {
             daoTokenName: localName,
             daoSymbol: localSymbol,
             daoMaxSize_: daoMaxSize,
-            minEtherAmount_: minEtherAmount,
-            maxEtherAmount_: maxEtherAmount,
+            minEtherAmount_: minStableAmount,
+            maxEtherAmount_: maxStableAmount,
             mintRate_: mintRate,
             daoDeployer_: owner
         });
@@ -113,7 +123,7 @@ contract Token is ERC20, ERC20Permit, ERC20Votes, Collection {
     function addMembersToApprovedList(address _newMember) external isOwner() {
         require(daoCounter < daoMaxSize);
         approvedList[_newMember] = true;
-        balances[_newMember] = 0;
+        members.push(_newMember);
         daoCounter++;
 
     }
@@ -128,15 +138,18 @@ contract Token is ERC20, ERC20Permit, ERC20Votes, Collection {
 
     // minting mechanism
     function mintTokens () external payable isApproved(msg.sender) eligableToMint(msg.sender) {
-        require(msg.value <= maxEtherAmount);
-        require(msg.value >= minEtherAmount);
-        uint weiAmount = msg.value;
-        uint tokenAmount = (weiAmount / 10**18) * mintRate;
+        require(msg.value <= maxStableAmount);
+        require(msg.value >= minStableAmount);
+        uint tokenAmount = msg.value  * mintRate;
         tokenTotalSupply += tokenAmount;
 
 
         _mint(msg.sender, tokenAmount);
         emit newMember(msg.sender, tokenAmount);
+    }
+
+    function getMembersArray() public view returns (address[] memory) {
+        return members;
     }
 
     // Override transfer function to make token non-transferrable

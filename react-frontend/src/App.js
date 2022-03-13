@@ -6,6 +6,7 @@ import TokenForm from './components/tokenForm/tokenForm';
 import GovernanceForm from './components/governanceForm/governanceForm';
 import MembersTable from './components/membersTable';
 import Home from './components/Home/Home';
+import Dashboard from './components/Dashboard/Dashboard'
 
 // import firebase from "firebase/compat/app";
 
@@ -14,8 +15,7 @@ class App extends Component {
     return (
       <BrowserRouter>
         <div className="App">
-          <Header />
-          <Home />
+          <Dashboard />
         </div>
       </BrowserRouter>
     );

@@ -19,13 +19,11 @@ async function deployToken() {
 
   // We get the contract to deploy
   const Token = await hre.ethers.getContractFactory("Token");
-  const token = await Token.deploy("Dao Name", "TestToken2", "TT1", 5, minEtherValue, maxEtherValue, 10000);
+  const token = await Token.deploy("Funky Dao", "Funky Dao", "FUNKY", 5, 1, 10, 10000);
 
   await token.deployed();
 
   console.log("TestToken2 deployed to:", token.address);
-  console.log(minEtherValue)
-  console.log(maxEtherValue)
 }
 
 // We recommend this pattern to be able to use async/await everywhere

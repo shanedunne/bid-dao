@@ -1,0 +1,83 @@
+.dashboardDiv {
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 85%;
+    height: 80vh;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 80px;
+    background-color: #0F0E0E;
+    border: 1px solid #0F0E0E;
+    padding-top: 20px;
+    border-radius: 25px;
+    box-shadow: 0 1px 7px #fafafa;
+}
+
+
+.members {
+    flex-basis: 43%;
+    float: left;
+    background-color: 0F0E0E;
+    height: 80%;
+    margin: auto;
+    border-radius: 25px;
+    box-shadow: 0 1px 7px #fafafa;
+}
+.proposals {
+    flex-basis: 50%;
+    margin: auto;
+    background-color: 0F0E0E;
+    height: 80%;
+    border-radius: 25px;
+    box-shadow: 0 1px 7px #fafafa;
+}
+
+.nameDiv {
+    text-align: center;
+    flex-basis: 100%;
+}
+
+.daoName {
+    color: #BC8034;
+    margin: auto;
+    font-size: 40px;
+    font-weight: 300;
+    
+}
+.contractAddress {
+    color: #fafafa;
+    font-weight: 100;
+}
+
+.break {
+    flex-basis: 100%;
+}
+
+.contentTitles {
+    color: #BC8034;
+    font-size: 32px;
+    font-weight: 200;
+    padding-left: 12px;
+    
+    
+}
+
+.fa-plus {
+    color: #BC8034;
+}
+/*---- Proposal Details ----*/
+
+.proposalsHeader {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.proposalDetails {
+    flex-basis: 50%;
+    margin: auto;
+    background-color: 0F0E0E;
+    height: 80%;
+    border-radius: 25px;
+    box-shadow: 0 1px 7px #BC8034;
+}
+
