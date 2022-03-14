@@ -42,7 +42,8 @@ contract Token is ERC20, ERC20Permit, ERC20Votes, Collection {
         daoName = _daoName;
         localName = _name_;
         localSymbol = _symbol_;
-        daoCounter = 0;
+        // change back to zero for deployment
+        daoCounter = 4;
         daoMaxSize = _daoMaxSize;
         minStableAmount = _minStableAmount;
         maxStableAmount = _maxStableAmount;
@@ -150,6 +151,10 @@ contract Token is ERC20, ERC20Permit, ERC20Votes, Collection {
 
     function getMembersArray() public view returns (address[] memory) {
         return members;
+    }
+
+    function spacesLeft() public view returns (uint) {
+        return daoMaxSize - daoCounter;
     }
 
     // Override transfer function to make token non-transferrable

@@ -81,3 +81,113 @@
     box-shadow: 0 1px 7px #BC8034;
 }
 
+/*---- Members ----*/
+.membersTableDiv {
+    width: 90%;
+    margin: 0 auto;
+}
+.membersTable {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+    margin: 0 auto;
+  }
+
+.membersTH {
+    border-bottom: 1px solid #fafafa;
+    text-align: left;
+    padding: 8px;
+    color: #BC8034;
+    font-size: 20px;
+    font-weight: 100;
+}
+
+.addressTD {
+    border-bottom: 1px solid #fafafa;
+    text-align: left;
+    padding: 8px;
+    color: #fafafa;
+    font-weight: 100;
+}
+
+.balanceTD {
+    border-bottom: 1px solid #fafafa;
+    text-align: center;
+    padding: 8px;
+    color: #fafafa;
+    font-weight: 100;
+}
+/*-- Approve Member Modal --*/
+.approveMemberModal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 500px;
+    height: 300px;
+    background-color:#0F0E0E ;
+    border: 2px solid #000;
+    text-align: center;
+}
+
+.amModalTitle {
+    color: #BC8034;
+    text-align: center;
+    font-weight: 200;
+}
+.amModalP {
+    color: #fafafa;
+    text-align: center;
+    font-weight: 200;
+}
+
+.amModalPSpaces {
+    color: #fafafa;
+    text-align: center;
+    font-weight: 200;
+}
+
+.amFormDiv {
+    text-align: center;
+}
+
+.amAddress {
+    display: block;
+    box-sizing: border-box;
+    width: 70%;
+    border-radius: 4px;
+    border: 1px solid white;
+    padding: 5px 5px;
+    margin-bottom: 25px;
+    font-size: 18px;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .amAddress[type="submit"] {
+    display: block;
+    box-sizing: border-box;
+    width: 40%;
+    border-radius: 4px;
+    padding: 5px 5px;
+    margin-bottom: 25px;
+    font-size: 18px;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    background: #BC8034;
+    color: #fafafa;
+  }
+
+  .amAddress[type="submit"]:hover {
+    background: #db9841;
+    color: #fafafa;
+  }
+  
+  .amAddress[type="submit"]:active {
+    transition: 0.3s all;
+    transform: translateY(1px);
+    border: 1px solid transparent;
+    opacity: 0.8;
+  }

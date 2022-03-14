@@ -1,6 +1,10 @@
 import React, {useState} from 'react';
 import style from "./tokenForm.module.css";
 
+// for setting the parameters on the token deploy call
+var dName, tName, tSymbol, dCap, mnEth, mxEth, mRate;
+// set the addresses received after the contracts are deployed
+var tokenAddress, timelockAddress
 
 export default function TokenForm() {
   const [form, setForm] = useState({
@@ -35,6 +39,12 @@ export default function TokenForm() {
 
     
   }
+  /*
+  async function callDeployScript(){
+    deployToken(dName, tName, tSymbol, dCap, mnEth, mxEth, mRate)
+    console.log(token.address)
+  }
+  */
 
   
     return (

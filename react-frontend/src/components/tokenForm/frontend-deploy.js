@@ -1,3 +1,4 @@
+import { ethers } from "ethers";
 // We require the Hardhat Runtime Environment explicitly here. This is optional
 // but useful for running the script in a standalone fashion through `node <script>`.
 //
@@ -19,7 +20,7 @@ async function deployToken() {
 
   // We get the contract to deploy
   const Token = await hre.ethers.getContractFactory("Token");
-  const token = await Token.deploy("Funky Dao", "Funky Dao", "FUNKY", 10, 1, 10, 10000);
+  const token = await Token.deploy("Funky Dao", "Funky Dao", "FUNKY", 5, 1, 10, 10000);
 
   await token.deployed();
 
