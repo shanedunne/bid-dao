@@ -4,7 +4,7 @@ const { tokenCompiler } = require('./solc-token');
 
 export default async function tokenGenerator(req, res) {
 
-    const {owner, tName, tSymbol, dCap, mnEth, mxEth, mRate} = req.body;
+    const {owner, tName, tSymbol, dCap, mnEth, mxEth, mRate, vQuorum} = req.body;
     // get address from ethers
     const addr = await ethers.provider.listAccounts()
 

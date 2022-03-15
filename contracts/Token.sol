@@ -140,7 +140,7 @@ contract Token is ERC20, ERC20Permit, ERC20Votes, Collection {
         
     }
 
-    // minting mechanism
+    /* minting mechanism
     function mintTokens () external payable isApproved(msg.sender) eligableToMint(msg.sender) {
         require(msg.value <= maxStableAmount);
         require(msg.value >= minStableAmount);
@@ -151,6 +151,7 @@ contract Token is ERC20, ERC20Permit, ERC20Votes, Collection {
         _mint(msg.sender, tokenAmount);
         emit newMember(msg.sender, tokenAmount);
     }
+    */
 
     function getMembersArray() public view returns (address[] memory) {
         return members;

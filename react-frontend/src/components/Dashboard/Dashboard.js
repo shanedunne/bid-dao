@@ -75,7 +75,7 @@ export default function Dashboard() {
       membersArray.forEach((el, i) => {
         membersObject[el] = balancesArray[i];
       });
-      console.log(membersObject);
+      console.table(membersObject);
     } catch (error) {}
   };
 

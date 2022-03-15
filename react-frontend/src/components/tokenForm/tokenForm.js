@@ -1,13 +1,18 @@
 import React, { useState } from "react";
 import style from "./tokenForm.module.css";
 import { ethers } from "ethers";
-import axiosConfig from "../../utils/axiosConfig"
+import { instance } from "../../utils/axiosConfig"
+import axios from "axios";
+// import tokenGenerator from "../../../../server/generate-token";
 
 // for setting the parameters on the token deploy call
-var owner, tName, tSymbol, dCap, mnEth, mxEth, mRate;
+var owner, tName, tSymbol, dCap, mnEth, mxEth, mRate, vQuorum;
 // set the addresses received after the contracts are deployed
 
-export default function TokenForm() {
+const TokenForm = (props) => {
+
+  const { userAddress, currentDao, setCurrentDao } = props;
+
   const [form, setForm] = useState({
     tokenName: "",
     tokenSymbol: "",
@@ -15,6 +20,7 @@ export default function TokenForm() {
     minEth: "",
     maxEth: "",
     mintRate: "1000",
+    quorum: "",
   });
 
   async function getOwner() {
@@ -41,8 +47,11 @@ export default function TokenForm() {
     mnEth = e.target.minEth.value;
     mxEth = e.target.maxEth.value;
     mRate = e.target.mintRate.value;
+    vQuorum = e.target.quorum.value;
 
-    const res = await axiosConfig.post("server/generate-token/", {
+    // tokenGenerator(owner, tName, tSymbol, dCap, mnEth, mxEth, mRate, vQuorum)
+
+    const res = await axios.post("http://localhost:3000/api/server/generate-token/", {
       owner,
       tName,
       tSymbol,
@@ -50,15 +59,13 @@ export default function TokenForm() {
       mnEth,
       mxEth,
       mRate,
+      vQuorum,
     });
-    if (res.status === 200) {
-      alert("DAO created");
-    }
   };
 
   return (
     <form onSubmit={handleSubmit} className={style.form}>
-      <h1 className={style.heading}>Mint DAO Token</h1>
+      <h1 className={style.heading}>Create DAO</h1>
       <p className={style.para}>Customise your token variables below</p>
       <input
         className={style.input}
@@ -113,7 +120,20 @@ export default function TokenForm() {
           <option value="100000">100,000</option>
         </select>
       </label>
+      <label className={style.label}>
+        Minimum % of members required per vote
+      <input
+        className={style.input}
+        type="number"
+        placeholder="Members quorum in %"
+        name="quorum"
+        value={form.maxEth}
+        onChange={handleInputChange}
+      />
+      </label>
       <input className={style.input} type="submit" />
     </form>
   );
 }
+
+export default TokenForm;

@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
 import style from "./Header.module.css";
 import React, { useState, useEffect } from "react";
-import { Identicon } from 'ethereum-react-components';
+import { Identicon, EthAddress } from 'ethereum-react-components';
 
 export default function App() {
   const [address, setAddress] = useState("");

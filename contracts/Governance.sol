@@ -15,9 +15,9 @@ contract Governance is Governor, GovernorSettings, GovernorCountingSimple, Gover
 
     address public tokenAddress;
 
-    constructor(uint _voteDelay, uint _votePeriod, IVotes _token, uint _quorum, TimelockController _timelock)
+    constructor(IVotes _token, uint _quorum, TimelockController _timelock)
         Governor("Governance")
-        GovernorSettings(_voteDelay /* vote delay */, _votePeriod /* vote period */, 0)
+        GovernorSettings(1, 45818, 0)
         GovernorVotes(_token)
         GovernorVotesQuorumFraction(_quorum)
         GovernorTimelockControl(_timelock)
