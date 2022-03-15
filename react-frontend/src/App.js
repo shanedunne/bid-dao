@@ -15,7 +15,7 @@ class App extends Component {
     return (
       <BrowserRouter>
         <div className="App">
-          <Dashboard />
+          <TokenForm />
         </div>
       </BrowserRouter>
     );

@@ -51,10 +51,10 @@ export default function Dashboard() {
     try {
       const members = await erc20.getMembersArray();
       // create js members array
-
       for (let i = 0; i < members.length; i++) {
         membersArray.push(members[i]);
       }
+
 
       // create balances array as per membersArray
 

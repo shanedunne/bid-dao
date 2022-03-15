@@ -36,10 +36,9 @@ contract Token is ERC20, ERC20Permit, ERC20Votes, Collection {
     // Initilising supply to allow owner access to dashboard to add members to list
     uint constant _initial_supply = 100000 * (10**18);
 
-    constructor(string memory _daoName, string memory _name_, string memory _symbol_, uint _daoMaxSize, uint _minStableAmount, uint _maxStableAmount, uint _mintRate) 
+    constructor(address _owner, string memory _name_, string memory _symbol_, uint _daoMaxSize, uint _minStableAmount, uint _maxStableAmount, uint _mintRate) 
     ERC20(_name_, _symbol_)
     ERC20Permit(_name_) payable {
-        daoName = _daoName;
         localName = _name_;
         localSymbol = _symbol_;
         // change back to zero for deployment
@@ -48,8 +47,9 @@ contract Token is ERC20, ERC20Permit, ERC20Votes, Collection {
         minStableAmount = _minStableAmount;
         maxStableAmount = _maxStableAmount;
         mintRate = _mintRate;
-        owner = msg.sender;
-        members.push(msg.sender);
+        owner = _owner;
+        members.push(owner);
+        approvedList[owner] = true;
 
         // Testing UI Purposes
         members.push(0x0a4A683e62d14B85fd174E5428730515a907b658);
@@ -131,7 +131,10 @@ contract Token is ERC20, ERC20Permit, ERC20Votes, Collection {
 
     // removes member from approved list
     function removeMembersFromApprovedList(address _member) external isOwner() {
+        require(approvedList[_member] = true);
         approvedList[_member] = false;
+        members[_member] = members[members.length - 1];
+        members.pop();
         daoCounter--;
         
         
@@ -161,7 +164,7 @@ contract Token is ERC20, ERC20Permit, ERC20Votes, Collection {
 
     // Terminate DAO an distribute balances
     
+    // remove items from array 
+
     
-
-
 }
