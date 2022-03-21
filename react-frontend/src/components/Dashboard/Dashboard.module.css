@@ -23,6 +23,18 @@
     border-radius: 25px;
     box-shadow: 0 1px 7px #fafafa;
 }
+
+.memberButtons {
+    color: #db9841!important;
+    text-decoration: underline!important;
+}
+
+.memberButtons:hover,
+.memberButtons:active {
+    color: #fafafa!important;
+    text-decoration: underline!important;
+}
+
 .proposals {
     flex-basis: 50%;
     margin: auto;

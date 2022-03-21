@@ -1,18 +1,18 @@
 /* global BigInt */
 import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import Box from "@mui/material/Box";
-import Paper from "@mui/material/Paper";
-import Grid from "@mui/material/Grid";
 import style from "./Dashboard.module.css";
-import Icon from "@mui/material/Icon";
 import { ethers } from "ethers";
 import erc20abi from "./erc20abi.json";
 import { styled } from "@mui/system";
 import { Modal } from "@mui/material";
 import { Button } from "@mui/material";
-import { Typography } from "@mui/material";
 
 export default function Dashboard() {
+
+  let { governanceAddress } = useParams();
+
   const contractAddress = "0xEbB5967119030791FC3f1022C4D1A0c9514d56dF";
   const [contractInfo, setContractInfo] = useState({
     displayName: "",
@@ -20,6 +20,7 @@ export default function Dashboard() {
     totalSupply: "",
     getSpacesLeft: "",
   });
+
 
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   var erc20 = new ethers.Contract(contractAddress, erc20abi, provider);
@@ -47,6 +48,7 @@ export default function Dashboard() {
   let membersObject = {};
   let membersArray = [];
   let balancesArray = [];
+  let finalArray = [];
   const getMembers = async () => {
     try {
       const members = await erc20.getMembersArray();
@@ -75,51 +77,67 @@ export default function Dashboard() {
       membersArray.forEach((el, i) => {
         membersObject[el] = balancesArray[i];
       });
-      console.table(membersObject);
     } catch (error) {}
+    memberRows = Object.entries(membersObject)
+    console.log(memberRows)
+
   };
 
-  function createData(address, balance) {
+  
+  // members tables
+
+  function createDataMembers(address, balance) {
     return { address, balance };
   }
 
-  const rows = [
-    createData("0x0a4A683e62d14B85fd174E5428730515a907b658", "22000"),
-    createData("0x2767CD05FdC45389aDb55e016358003227CfeBA5", "34000"),
-    createData("0x0a4A683e62d14B85fd174E5428730515a907b448", "22000"),
-    createData("0x2767CD05FdC45389aDb55e016358003227CfeB12", "34000"),
-    createData("0x0a4A683e62d14B85fd174E5428730515a907b643", "22000"),
-    createData("0x2767CD05FdC45389aDb55e016358003227CfeB678", "34000"),
-    createData("0x0a4A683e62d14B85fd174E5428730515a907b65h56", "22000"),
-    createData("0x2767CD05FdC45389aDb55e016358003227CfeB667", "34000"),
-  ].sort();
+  var memberRows = [
+    createDataMembers("0x0a4A683e62d14B85fd174E5428730515a907b658", "22000"),
+    createDataMembers("0x2767CD05FdC45389aDb55e016358003227CfeBA5", "34000"),
+    createDataMembers("0x4281ecf07378ee595c564a59048801330f3084ee", "22000"),
+    createDataMembers("0xdd08bc1127a0826bd093fdc8d584a037834f04d9", "34000"),
+    createDataMembers("0x0a4A683e62d14B85fd174E5428730515a907b643", "22000"),].sort();
 
-  function dataRows() {
-    for (let i = 0; i <= membersArray.length; i++) {
-      for (let j = 0; j <= balancesArray.length; j++) {
-        rows.push(createData(membersArray[i], balancesArray[j]));
-      }
-    }
-  }
 
-  // for (const [key, value] of Object.entries(membersObject)) {
-  // rows.push(createData(`${key}, ${value}`));
-  // }
+  const MemberRoot = styled("div")``;
 
-  const Root = styled("div")``;
-
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState();
+  const [memberPage, setMemberPage] = React.useState(0);
+  const [rowsMemberPerPage, setMemberRowsPerPage] = React.useState();
 
   // Avoid a layout jump when reaching the last page with empty rows.
-  const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+  const emptyMemberRows =
+    memberPage > 0 ? Math.max(0, (1 + memberPage) * rowsMemberPerPage - memberRows.length) : 0;
+
+
+   // proposals tables
+
+   function createDataProposal(id, title, status) {
+    return { id, title, status };
+  }
+
+  var proposalRows = [
+    createDataProposal(5, "Proposal to increase dao max capacity by 5", "Pending"),
+    createDataProposal(4, "Proposal to sell 75% of the treasury UNI on Uniswap", "Pending"),
+    createDataProposal(3, "Proposal to stake 50% of the treasury ETH with Lido", "Executed"),
+    createDataProposal(2, "Proposal to use 5% of the DAO treasury to purchase MATIC", "Defeated"),
+    createDataProposal(1, "Proposal to aquire a basket of DEFI tokens", "Executed"),  
+  ].sort();
+
+
+  const ProposalRoot = styled("div")``;
+
+  const [proposalPage, setProposalPage] = React.useState(0);
+  const [rowsProposalPerPage, setProposalRowsPerPage] = React.useState();
+
+  // Avoid a layout jump when reaching the last page with empty rows.
+  const emptyProposalRows =
+    proposalPage > 0 ? Math.max(0, (1 + proposalPage) * rowsProposalPerPage - proposalRows.length) : 0;
+
+
 
   // on mount useEffect
   useEffect(() => {
     getTokenInfo();
     getMembers();
-    dataRows();
   }, []);
 
   // approve member
@@ -151,7 +169,7 @@ export default function Dashboard() {
     <div className={style.dashboardDiv}>
       <div className={style.nameDiv}>
         <h1 className={style.daoName}>{contractInfo.displayName}</h1>
-        <h3 className={style.contractAddress}>{contractAddress}</h3>
+        <h3 className={style.contractAddress}>{governanceAddress}</h3>
       </div>
       <div className={style.break}></div>
       <div className={style.members}>
@@ -160,7 +178,8 @@ export default function Dashboard() {
             <h3 className={style.contentTitles}>Members</h3>
           </span>
           <span>
-            <Button onClick={handleOpen}>Approve Member</Button>
+            <Button className={style.memberButtons} onClick={handleOpen}>Approve Member</Button>
+            <Button className={style.memberButtons} >One Time Mint</Button>
             <Modal
               open={open}
               onClose={handleClose}
@@ -183,7 +202,7 @@ export default function Dashboard() {
             </Modal>
           </span>
           <div className={style.membersTableDiv}>
-            <Root>
+            <MemberRoot>
               <table
                 className={style.membersTable}
                 aria-label="custom pagination table"
@@ -199,12 +218,12 @@ export default function Dashboard() {
                   </tr>
                 </thead>
                 <tbody>
-                  {(rowsPerPage > 0
-                    ? rows.slice(
-                        page * rowsPerPage,
-                        page * rowsPerPage + rowsPerPage
+                  {(rowsMemberPerPage > 0
+                    ? memberRows.slice(
+                        memberPage * rowsMemberPerPage,
+                        memberPage * rowsMemberPerPage + rowsMemberPerPage
                       )
-                    : rows
+                    : memberRows
                   ).map((row) => (
                     <tr key={row.address}>
                       <td className={style.addressTD}>{row.address}</td>
@@ -212,8 +231,8 @@ export default function Dashboard() {
                     </tr>
                   ))}
 
-                  {emptyRows > 0 && (
-                    <tr style={{ height: 41 * emptyRows }}>
+                  {emptyMemberRows > 0 && (
+                    <tr style={{ height: 41 * emptyMemberRows }}>
                       <td colSpan={3} />
                     </tr>
                   )}
@@ -222,14 +241,60 @@ export default function Dashboard() {
                   <tr></tr>
                 </tfoot>
               </table>
-            </Root>
+            </MemberRoot>
           </div>
         </div>
       </div>
       <div className={style.proposals}>
         <div className={style.proposalsHeader}>
           <h3 className={style.contentTitles}>Proposals</h3>
+          <div className={style.membersTableDiv}>
+          <Button className={style.memberButtons} >Create Proposal</Button>
+            <ProposalRoot>
+              <table
+                className={style.membersTable}
+                aria-label="custom pagination table"
+              >
+                <thead>
+                  <tr>
+                    <th className={style.membersTH}>
+                      ID
+                    </th>
+                    <th className={style.membersTH}>
+                      Proposal Title
+                    </th>
+                    <th className={style.membersTH}>
+                      Status
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {(rowsProposalPerPage > 0
+                    ? proposalRows.slice(
+                        proposalPage * rowsProposalPerPage,
+                        proposalPage * rowsProposalPerPage + rowsProposalPerPage
+                      )
+                    : proposalRows
+                  ).map((row) => (
+                    <tr key={row.address}>
+                      <td className={style.addressTD}>{row.id}</td>
+                      <td className={style.balanceTD}>{row.title}</td>
+                      <td className={style.balanceTD}>{row.status}</td>
+                    </tr>
+                  ))}
 
+                  {emptyProposalRows > 0 && (
+                    <tr style={{ height: 41 * emptyProposalRows }}>
+                      <td colSpan={3} />
+                    </tr>
+                  )}
+                </tbody>
+                <tfoot>
+                  <tr></tr>
+                </tfoot>
+              </table>
+            </ProposalRoot>
+          </div>
           <div className={style.proposalDetails}>
             <span className={style.proposalId}></span>
             <span className={style.proposalTitle}></span>

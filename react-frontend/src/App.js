@@ -23,7 +23,7 @@ function App() {
             }
           />
           <Route
-            path="/dashboard/"
+            path="/dashboard/:governanceAddress"
             element={
               <Dashboard currentDao={currentDao} userAddress={userAddress} />
             }

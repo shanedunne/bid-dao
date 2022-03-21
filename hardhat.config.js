@@ -11,6 +11,7 @@ module.exports = {
       
     }
   },
+  defaultNetwork: "rinkeby",
   etherscan: {
     apiKey: "Y9KVN5AXDYYE5BNBW74VTKEUQPZMDPTA3R"
   }

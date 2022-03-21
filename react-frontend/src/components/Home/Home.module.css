@@ -74,9 +74,16 @@
   }
 
   .daoName {
-      padding-right: 8px;
-  }
+    text-decoration: none;
+    color: #db9841;
+    font-size: 30px;
 
-  .daoSymbol {
-      padding-left: 8px;
   }
+.daoLink {
+  text-decoration: none;
+}
+
+.daoName:hover {
+  text-decoration: underline;
+  color: #fafafa;
+}

@@ -1,12 +1,12 @@
 const solc = require('solc');
 
 
-const tokenCompiler = (fileBuf, name) => {
-  const input = {
+function contractCompiler(contractData, name) {
+  var input = {
     language: 'Solidity',
     sources: {
       "name": {
-        content: fileBuf
+        content: contractData
       }
     },
     settings: {
@@ -16,8 +16,12 @@ const tokenCompiler = (fileBuf, name) => {
         }
       }
     }
-  };  
-  const output = JSON.parse(solc.compiler(JSON.stringify(input)));
+  };
+  
+  const output = JSON.parse(solc.compile(JSON.stringify(input)));
+  
+
+
 
   let res;
 
@@ -28,11 +32,15 @@ const tokenCompiler = (fileBuf, name) => {
     case 'Timelock.sol':
       res = [output.contracts.name.Timelock.abi, output.contracts.name.Timelock.evm.bytecode];
       break;
+      case 'Box.sol':
+      res = [output.contracts.name.Box.abi, output.contracts.name.Box.evm.bytecode];
+      break;
+    case 'Governance.sol':
+      res = [output.contracts.name.Governance.abi, output.contracts.name.Governance.evm.bytecode];
+      break;
   }
 
   return res;
 };
 
-export {
-  tokenCompiler
-};
+module.exports = contractCompiler;
