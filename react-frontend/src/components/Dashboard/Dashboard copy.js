@@ -5,32 +5,15 @@ import Box from "@mui/material/Box";
 import style from "./Dashboard.module.css";
 import { ethers } from "ethers";
 import erc20abi from "./erc20abi.json";
-import governanceAbi from "./governanceAbi.json"
 import { styled } from "@mui/system";
 import { Modal } from "@mui/material";
 import { Button } from "@mui/material";
-import { instance } from "../../utils/axiosConfig";
-import ProposalForm from "./Proposal";
 
- const Dashboard = props => {
+export default function Dashboard() {
 
   let { governanceAddress } = useParams();
-  
 
-  const [daoInfo, setDaoInfo] = useState([])
-
-  
-  const getDaoData = () => {
-    instance.get('/dao-info/governanceAddress/' + governanceAddress)
-    .then(res =>  { 
-      console.log(res.data[0]);
-      setDaoInfo(res.data[0]);
-      console.log(daoInfo)
-    })
-    .catch(error => console.log(error))
-  }
-
-  const contractAddress = daoInfo.tokenAddress;
+  const contractAddress = "0xEbB5967119030791FC3f1022C4D1A0c9514d56dF";
   const [contractInfo, setContractInfo] = useState({
     displayName: "",
     tokenSymbol: "",
@@ -42,13 +25,11 @@ import ProposalForm from "./Proposal";
     memInfo: []
   });
 
-  var provider;
-  var erc20;
-  
+
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  var erc20 = new ethers.Contract(contractAddress, erc20abi, provider);
 
   const getTokenInfo = async () => {
-    provider = new ethers.providers.Web3Provider(window.ethereum);
-    erc20 = new ethers.Contract(contractAddress, erc20abi, provider);
     try {
       const displayName = await erc20.name();
       const tokenSymbol = await erc20.symbol();
@@ -77,29 +58,25 @@ import ProposalForm from "./Proposal";
       const members = await erc20.getMembersArray();
       // create js members array
       for (let i = 0; i < members.length; i++) {
-        for (let j = 0; j < membersArray.length; j++) {
-          let addressBalance = await erc20.balanceOf(membersArray[j]);
-          let hex = addressBalance._hex;
-          if (hex.length % 2) {
-            hex = "0" + hex;
-          }
-  
-          var bn = BigInt(hex);
-  
-          var d = bn.toString(10);
-          var addBalance = d.slice(0, 5);
-          balancesArray.push(addBalance);
-          finalArray.push({
-            address: members[i],
-            balance: addBalance
-          })
-        }
+        membersArray.push(members[i]);
       }
 
 
       // create balances array as per membersArray
 
-      
+      for (let i = 0; i < membersArray.length; i++) {
+        let addressBalance = await erc20.balanceOf(membersArray[i]);
+        let hex = addressBalance._hex;
+        if (hex.length % 2) {
+          hex = "0" + hex;
+        }
+
+        var bn = BigInt(hex);
+
+        var d = bn.toString(10);
+        var balance = d.slice(0, 5);
+        balancesArray.push(balance);
+      }
       // assign balance to the corresponding address
       membersArray.forEach((el, i) => {
         membersObject[el] = balancesArray[i];
@@ -109,6 +86,7 @@ import ProposalForm from "./Proposal";
     setMembersInfo({
       ...membersInfo, memInfo: memberRows
     })
+    console.log(membersInfo.memInfo) 
 
   };
 
@@ -135,9 +113,8 @@ import ProposalForm from "./Proposal";
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyMemberRows =
     memberPage > 0 ? Math.max(0, (1 + memberPage) * rowsMemberPerPage - memberRows.length) : 0;
-  
 
-  
+
    // proposals tables
 
    function createDataProposal(id, title, status) {
@@ -166,20 +143,15 @@ import ProposalForm from "./Proposal";
 
   // on mount useEffect
   useEffect(() => {
-    getDaoData();
-    
-  }, []);
-
-  useEffect(() => {
     getTokenInfo();
     getMembers();
-  }, [getDaoData]);
+  }, []);
 
   // approve member
-  // approvel member modal
-  const [AMopen, AMsetOpen] = React.useState(false);
-  const AMhandleOpen = () => AMsetOpen(true);
-  const AMhandleClose = () => AMsetOpen(false);
+  // modal
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   // approve member form
   const [amForm, setAMForm] = useState({
@@ -199,49 +171,11 @@ import ProposalForm from "./Proposal";
     erc20 = new ethers.Contract(contractAddress, erc20abi, signer);
     await erc20.addMembersToApprovedList(submitAddress)
   }
-  // create proposal
-  // create proposal modal
-  const [CPopen, CPsetOpen] = React.useState(false);
-  const CPhandleOpen = () => CPsetOpen(true);
-  const CPhandleClose = () => CPsetOpen(false);
 
-  // create proposal form
-  const [CPForm, setCPForm] = useState({
-    targets: [],
-    values: [],
-    signatures: [],
-    calldata: [],
-    description: ''
-  });
-
-  const handleCPChange = (e) => {
-    setCPForm({ ...CPForm, [e.target.name]: e.target.value });
-  };
-
-
-  const CPSubmit = async (e) => {
-    e.preventDefault();
-    const targets = e.target.targets.value;
-    const values = e.target.values.value;
-    const signatures = e.target.signatures.value;
-    const calldata = e.target.calldata.value;
-    const description = e.target.description.value;
-
-    await provider.send("eth_requestAccounts", []);
-    const signer = await provider.getSigner();
-    const gov = new ethers.Contract(daoInfo.governanceAddress, governanceAbi, signer);
-    const tx = await gov.propose(targets, values, signatures, calldata, description)
-    await tx.wait();
-    
-  }
-
-  if(daoInfo === undefined) {
-    return <h1>Still Loading...</h1>
-  }
   return (
     <div className={style.dashboardDiv}>
       <div className={style.nameDiv}>
-        <h1 className={style.daoName}>{daoInfo.tokenName}</h1>
+        <h1 className={style.daoName}>{contractInfo.displayName}</h1>
         <h3 className={style.contractAddress}>{governanceAddress}</h3>
       </div>
       <div className={style.break}></div>
@@ -251,37 +185,25 @@ import ProposalForm from "./Proposal";
             <h3 className={style.contentTitles}>Members</h3>
           </span>
           <span>
-            <Button className={style.memberButtons} onClick={AMhandleOpen}>
-              Approve Member
-            </Button>
-            <Button className={style.memberButtons}>One Time Mint</Button>
+            <Button className={style.memberButtons} onClick={handleOpen}>Approve Member</Button>
+            <Button className={style.memberButtons} >One Time Mint</Button>
             <Modal
-              open={AMopen}
-              onClose={AMhandleClose}
+              open={open}
+              onClose={handleClose}
               aria-labelledby="modal-modal-title"
               aria-describedby="modal-modal-description"
             >
               <Box className={style.approveMemberModal}>
                 <h2 className={style.amModalTitle}>
-                  Add Members to Approved List
+                    Add Members to Approved List
                 </h2>
-                <p className={style.amModalP}>
-                  Functionality only available to the contract deployer
-                </p>
-                <p className={style.amModalPSpaces}>
-                  Spaces left: {contractInfo.getSpacesLeft}
-                </p>
-                <div>
-                  <form className={style.amFormDiv} onSubmit={amSubmit}>
-                    <input
-                      className={style.amAddress}
-                      type="text"
-                      name="amAddress"
-                      value={amForm.amAddress}
-                      onChange={handleAMChange}
-                    />
-                    <input className={style.input} type="submit" />
-                  </form>
+                <p className={style.amModalP}>Functionality only available to the contract deployer</p>
+                <p className={style.amModalPSpaces}>Spaces left: {contractInfo.getSpacesLeft}</p>
+                <div >
+                <form className={style.amFormDiv} onSubmit={amSubmit}>
+                    <input className={style.amAddress} type="text" name="amAddress" value={amForm.amAddress} onChange={handleAMChange} />
+                    <input className={style.amAddress} type="submit" />
+                </form>
                 </div>
               </Box>
             </Modal>
@@ -334,66 +256,7 @@ import ProposalForm from "./Proposal";
         <div className={style.proposalsHeader}>
           <h3 className={style.contentTitles}>Proposals</h3>
           <div className={style.membersTableDiv}>
-            <Button className={style.memberButtons} onClick={CPhandleOpen}>
-              Create Proposal
-            </Button>
-            <Modal
-              open={CPopen}
-              onClose={CPhandleClose}
-              aria-labelledby="modal-modal-title"
-              aria-describedby="modal-modal-description"
-            >
-              <Box className={style.createProposalModal}>
-                <h2 className={style.amModalTitle}>Create Dao Proposal</h2>
-                <p className={style.amModalP}>
-                  Create proposals for your DAO's next move below!
-                </p>
-                <div>
-                  <form className={style.amFormDiv} onSubmit={CPSubmit}>
-                    <input
-                      className={style.CPinput}
-                      type="text"
-                      placeholder="List of Target Addresses"
-                      name="targets"
-                      value={CPForm.targets}
-                      onChange={handleCPChange}
-                    />
-                    <input
-                      className={style.CPinput}
-                      type="text"
-                      placeholder="Values (i.e. msg.value) to be sent"
-                      name="values"
-                      value={CPForm.values}
-                      onChange={handleCPChange}
-                    />
-                    <input
-                      className={style.CPinput}
-                      type="text"
-                      placeholder="Signatures required"
-                      name="signatures"
-                      value={CPForm.signatures}
-                      onChange={handleCPChange}
-                    />
-                    <input
-                      className={style.CPinput}
-                      type="text"
-                      placeholder="Calldata i.e. function calls from Box contract"
-                      name="calldata"
-                      value={CPForm.calldata}
-                      onChange={handleCPChange}
-                    />
-                    <textarea
-                      className={style.textarea}
-                      placeholder="Description of the proposal"
-                      name="description"
-                      value={CPForm.description}
-                      onChange={handleCPChange}
-                    />
-                    <input className={style.amAddress} type="submit" />
-                  </form>
-                </div>
-              </Box>
-            </Modal>
+          <Button className={style.memberButtons} >Create Proposal</Button>
             <ProposalRoot>
               <table
                 className={style.membersTable}
@@ -401,9 +264,15 @@ import ProposalForm from "./Proposal";
               >
                 <thead>
                   <tr>
-                    <th className={style.membersTH}>ID</th>
-                    <th className={style.membersTH}>Proposal Title</th>
-                    <th className={style.membersTH}>Status</th>
+                    <th className={style.membersTH}>
+                      ID
+                    </th>
+                    <th className={style.membersTH}>
+                      Proposal Title
+                    </th>
+                    <th className={style.membersTH}>
+                      Status
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -444,4 +313,3 @@ import ProposalForm from "./Proposal";
     </div>
   );
 }
-export default Dashboard;

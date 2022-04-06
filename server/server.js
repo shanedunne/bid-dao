@@ -8,6 +8,7 @@ const mongoose = require('mongoose');
 const Model = require('./models/Dao');
 // require('./generate-dao');
 const generator = require('./generate-dao');
+const { modelName } = require('./models/Dao');
 
 
 app.use(cors())
@@ -37,6 +38,16 @@ app.get('/daos', async (req, res) => {
 app.get('/', (req, res) => {
   res.send("Test")
 })
+
+app.get('/dao-info/governanceAddress/:governanceAddress/', async (req, res) => {
+  let address = req.params.governanceAddress;
+  console.log(address)
+  Model.find({governanceAddress: address}, (err, result) => {
+    if(err) throw err;
+    console.log(result)
+    res.send(result)
+  });
+});
 
 
 app.listen(port, () => {

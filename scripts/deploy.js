@@ -13,17 +13,20 @@ async function deployToken() {
   // manually to make sure everything is compiled
   await hre.run('compile');
 
-  const minEtherValue = ethers.utils.parseUnits("0.01", "ether");
-  const maxEtherValue = ethers.utils.parseUnits("0.1", "ether");
 
 
   // We get the contract to deploy
   const Token = await hre.ethers.getContractFactory("Token");
-  const token = await Token.deploy("Funky Dao", "Funky Dao", "FUNKY", 10, 1, 10, 10000);
+  const token = await Token.deploy("0x2767CD05FdC45389aDb55e016358003227CfeBA5", "Funky Dao", "FUNKY", 10, 10000);
 
   await token.deployed();
 
   console.log("TestToken2 deployed to:", token.address);
+
+  const Governance = await hre.ethers.getContractFactory("Governance");
+  const governance = await Governance.deploy("0x2111A38EC807498bC529F2528F55422B98854b0d", token.address, "0x2767CD05FdC45389aDb55e016358003227CfeBA5", "Funky Dao");
+  await governance.deployed();
+  console.log('Governance Address: ' + governance.address);
 }
 
 // We recommend this pattern to be able to use async/await everywhere

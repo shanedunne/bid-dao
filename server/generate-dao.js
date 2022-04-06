@@ -36,8 +36,8 @@ async function tokenGenerator(body, res) {
     console.log("Token address:" + token.address)
 
     // get governance conract address
-    const nonce = await ethers.provider.getTransactionCount(addr);
-    const govAdd = ethers.utils.getContractAddress({ from: addr, nonce: nonce + 1 });
+    const nonce = await ethers.provider.getTransactionCount(daoOwner);
+    const govAdd = ethers.utils.getContractAddress({ from: daoOwner, nonce: nonce + 1 });
 
     // deploy timelock contract with governance address as parameter
     const Timelock = await ethers.getContractFactory(timelockAbi, timelockByte);
@@ -48,7 +48,7 @@ async function tokenGenerator(body, res) {
 
     // deploy box address with timelock as agent
     const Box = await ethers.getContractFactory(boxAbi, boxByte);
-    const box = await Box.deploy(timelock.address);
+    const box = await Box.deploy(timelock.address, daoOwner);
     await box.deployed();
     console.log("Box contract successfully deployed!")
     console.log("Box address:" + box.address)

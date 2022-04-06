@@ -22,6 +22,8 @@
     "fs": "0.0.1-security",
     "hardhat": "^2.9.1",
     "mongoose": "^6.2.6",
+    "path-resolve": "^1.0.2",
+    "resolve-path": "^1.4.0",
     "solc": "^0.8.13"
   },
   "devDependencies": {
